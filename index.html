@@ -4,16 +4,17 @@
 	<title>Campo Minado</title>
     <meta charset="UTF-8"/>
     <link rel="stylesheet" type="text/css" href="css/style.css"/>
+    <script src="js/script.js"></script>
 </head>
 <body>
     <form name="game-parameters" onsubmit="return startGame()" method="post">
 	        <p>Customize your game:</p>
             <input type="text" name="name" placeholder="name" class="params">
-            <input type="text" name="horizontal" placeholder="width" class="params">
+            <input type="text" name="width" placeholder="width" class="params">
             <span>X</span>
             <input type="text" name="height" placeholder="height" class="params">
             <input type="text" name="qtyBombs" placeholder="amount of bombs" class="params"> <br/><br/>
-            <p>DANGER: The minimal dimension is: 6 x 6.</p>
+            <p>DANGER: The minimal dimension is: 6 x 6. And the maximum is: 50 x 50</p>
         <input id="bt-start" type="submit" value="Start">	
     </form>
 
