@@ -16,7 +16,7 @@ form {
 }
 
 #campo-minado {
-    width:100%;
+    margin: 0 auto;
     height:100%;
     margin-top:30px;
     text-align:center;
@@ -32,6 +32,10 @@ td {
     margin:auto;
 }
 
+.Number0{
+    background: url(none.png)
+}
+
 .Number1{
     color:#4876FF;
 }
@@ -40,6 +44,16 @@ td {
     color:#3CB371;
 }
 
-.Mine{
-    color:#CD3333;
+.Number3{
+    color:#FF0000;
 }
+
+.Number4{
+    color:#104E8B;
+}
+
+.Mine{
+    background: url(mine.png)
+}
+
+

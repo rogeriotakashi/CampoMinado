@@ -101,9 +101,7 @@ function jogada(row,col)
 	}
 	else
 	{
-		document.getElementById("row"+row+"col"+col).value = cells[row][col].getNeighbourMineCount();
-		document.getElementById("row"+row+"col"+col).className = getNumberColor(cells[row][col].getNeighbourMineCount());
-		
+		openCell(cells[row][col]);
 	}
 }
 
@@ -117,10 +115,10 @@ function setRandomMines(numberOfMines)
 		var row = randomNumber();
 		var col = randomNumber();
 
-		if(cells[row][col].getHasMine() == false)
+		if(cells[row][col].getHasMine() == false){
 			cells[row][col].setHasMine(true); 
-		
-		actualMines++;
+			actualMines++;
+		}	
 
 	}
 	
@@ -166,8 +164,7 @@ function revealAll()
         {
         	if(cells[i][j].getHasMine() == false)
         	{
-            	document.getElementById("row"+i+"col"+j).value = cells[i][j].getNeighbourMineCount();
-            	document.getElementById("row"+i+"col"+j).className = getNumberColor(cells[i][j].getNeighbourMineCount());
+        		openCell(cells[i][j]);
             	
         	}
             else
@@ -184,4 +181,15 @@ function getNumberColor(NeighbourMineCount)
 	return "Number"+NeighbourMineCount;
 }
 
+function openNeighbour(cell){
+
+}
+
+function openCell(cell){
+
+	// If its a 0 value field
+	if(cell.getNeighbourMineCount() != 0)
+		document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = cell.getNeighbourMineCount();
+    document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).className = getNumberColor(cell.getNeighbourMineCount());
+}
 
