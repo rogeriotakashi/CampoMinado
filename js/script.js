@@ -1,5 +1,12 @@
 params = new Object();
 
+// Logic - Rogerio
+var cells = new Array();
+var row = 0;
+var col = 0;
+
+
+
 function startGame() {
     var check = checkDimensions();
     var check2 = checkNumBombs();
@@ -8,7 +15,33 @@ function startGame() {
     if (check && check2) {
         params.name = myForm["name"].value;
         params.qtyBombs = myForm["qtyBombs"].value;
-        createTable();
+        
+        // Create table
+		createTable();
+		
+		// Create cells
+		row = params.width;
+		col = params.height;
+			
+		for (var i=0 ;i < row; i++) 
+		{
+			cells[i] = new Array();
+			for (var j = 0; j < col; j++) 
+			{
+				cells[i][j] = new cell();
+				cells[i][j].setRowCoord(i);
+				cells[i][j].setColCoord(j);
+			}
+		}
+
+		// Set mines
+		setRandomMines(params.qtyBombs);
+
+		// Scan 
+		scanNeighbour();
+
+
+		
     }
 
     return false;
@@ -32,11 +65,11 @@ function createTable() {
     var table = document.getElementById("campo-minado");
     var columnCount = params.width;
 
-    for (var i = 1; i < params.height; i++) {
-        row = table.insertRow(-1);
+    for (var i = 0; i < params.height; i++) {
+        tableRow = table.insertRow(-1);
         for (var j = 0; j < columnCount; j++) {
-            var cell = row.insertCell(-1);
-            cell.innerHTML = "0";
+            var cell = tableRow.insertCell(-1);
+            cell.innerHTML = "<input type='button' id='row"+i+"col"+j+"' value=' ' onclick='jogada("+i+","+j+")'/>";
         }
     }
 }
@@ -56,3 +89,99 @@ function checkNumBombs() {
     }
 
 }
+
+function jogada(row,col)
+{
+	cells[row][col].setIsOpened(true);
+	if(cells[row][col].getHasMine() == true)
+	{
+		document.getElementById("row"+row+"col"+col).value="X";
+		document.getElementById("row"+row+"col"+col).className = "Mine";
+		alert("Game Over");
+	}
+	else
+	{
+		document.getElementById("row"+row+"col"+col).value = cells[row][col].getNeighbourMineCount();
+		document.getElementById("row"+row+"col"+col).className = getNumberColor(cells[row][col].getNeighbourMineCount());
+		
+	}
+}
+
+
+function setRandomMines(numberOfMines)
+{
+	var actualMines = 0;
+	
+	while(actualMines < numberOfMines)
+	{
+		var row = randomNumber();
+		var col = randomNumber();
+
+		if(cells[row][col].getHasMine() == false)
+			cells[row][col].setHasMine(true); 
+		
+		actualMines++;
+
+	}
+	
+}
+
+function randomNumber()
+{
+	return Math.floor(Math.random() * params.width);
+}
+
+function scanNeighbour()
+{
+	for (var i=0 ; i < col; i++) 
+	{
+ 		for (var j = 0; j < row; j++) 
+ 		{
+ 			if(i > 0 && j > 0 && cells[i-1][j-1].getHasMine()==true)
+ 				cells[i][j].addNeighbourMineCount(); 	
+			if(i > 0 && cells[i-1][j].getHasMine()==true)
+				cells[i][j].addNeighbourMineCount();
+			if(i > 0 && j < (row-1) && cells[i-1][j+1].getHasMine()==true)
+				cells[i][j].addNeighbourMineCount();
+			if(j > 0 && cells[i][j-1].getHasMine()==true)
+				cells[i][j].addNeighbourMineCount();
+			if(j < (row-1) && cells[i][j+1].getHasMine()==true)
+				cells[i][j].addNeighbourMineCount();
+			if(i < (col-1) && j > 0 && cells[i+1][j-1].getHasMine()==true)
+				cells[i][j].addNeighbourMineCount();
+			if(i < (col-1) && cells[i+1][j].getHasMine()==true)
+				cells[i][j].addNeighbourMineCount();
+			if(i < (col-1) && j < (row-1) && cells[i+1][j+1].getHasMine()==true)
+				cells[i][j].addNeighbourMineCount();
+ 		}
+	}
+
+}
+
+function revealAll()
+{
+	for (var i = 0; i < params.width; i++) 
+	{
+        for (var j = 0; j < params.height; j++) 
+        {
+        	if(cells[i][j].getHasMine() == false)
+        	{
+            	document.getElementById("row"+i+"col"+j).value = cells[i][j].getNeighbourMineCount();
+            	document.getElementById("row"+i+"col"+j).className = getNumberColor(cells[i][j].getNeighbourMineCount());
+            	
+        	}
+            else
+            {
+            	document.getElementById("row"+i+"col"+j).value = 'X';
+            	document.getElementById("row"+i+"col"+j).className = "Mine";
+            }
+        }
+    }
+}
+
+function getNumberColor(NeighbourMineCount)
+{
+	return "Number"+NeighbourMineCount;
+}
+
+
