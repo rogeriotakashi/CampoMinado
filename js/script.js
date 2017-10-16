@@ -104,9 +104,9 @@ function jogada(row,col)
 	{
 		if(cells[row][col].getNeighbourMineCount() != 0)
 			openCell(cells[row][col]);
-		else
-			openNoneCell(cells[row][col]);
-			//openRecursive(cells[row][col]);
+		else{
+			openRecursive(cells[row][col]);
+		}
 	}
 }
 
@@ -188,43 +188,47 @@ function getNumberColor(NeighbourMineCount)
 	return "Number"+NeighbourMineCount;
 }
 
-/*
+
 function openRecursive(cell){
-	var row = cell.getRowCoord();
-	var col = cell.getColCoord();
+	var cellRow = cell.getRowCoord();
+	var cellCol = cell.getColCoord();
+	openNoneCell(cell);
 
-	if(row > 0 && col > 0)
-		openNextRecursive(cell[row - 1][col - 1]);
-	if(row > 0)
-    	openNextRecursive(cell[row - 1][col]);
-    if(row > 0 && col < )
-    openNextRecursive(cell[row - 1][col + 1]);
-    openNextRecursive(cell[row + 1][col]);
-
-    openNextRecursive(cell[row][col - 1]);
-    openNextRecursive(cell[row][col + 1]);
-    openNextRecursive(cell[row + 1][col - 1]);
-    openNextRecursive(cell[row + 1][col + 1]);
+	if(cellRow > 0 && cellCol > 0)
+		openNextRecursive(cells[cellRow - 1][cellCol - 1]);
+	if(cellRow > 0)
+    	openNextRecursive(cells[cellRow - 1][cellCol]);
+    if(cellRow > 0 && cellCol < col-1)
+    	openNextRecursive(cells[cellRow - 1][cellCol + 1]);
+    if(cellRow < row-1)
+    	openNextRecursive(cells[cellRow + 1][cellCol]);
+    if(cellCol > 0)
+    	openNextRecursive(cells[cellRow][cellCol - 1]);
+    if(cellCol < col-1)
+    	openNextRecursive(cells[cellRow][cellCol + 1]);
+    if(cellRow < row-1 && cellCol > 0)
+    	openNextRecursive(cells[cellRow + 1][cellCol - 1]);
+    if(cellRow < row-1 && cellCol < col-1)
+    	openNextRecursive(cells[cellRow + 1][cellCol + 1]);
 }
 
 function openNextRecursive(cell){
 	var row = cell.getRowCoord();
 	var col = cell.getColCoord();
 
-    if (cell == null) return;
     if (cell.getIsOpened() == true) return;
 
-    // Blank field
-    if (cell.getNeighbourMineCount == 0){
+    if (cell.getNeighbourMineCount() == 0){
         cell.setIsOpened(true);
         openNoneCell(cell);
         openRecursive(cell);
     }
-    else{    
-    cell.setIsOpened(true);
-    openCell(cell);
+    else
+    {    
+	    cell.setIsOpened(true);
+	    openCell(cell);
     }
-}*/
+}
 
 function openCell(cell){
 	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = cell.getNeighbourMineCount();
