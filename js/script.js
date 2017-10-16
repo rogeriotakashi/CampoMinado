@@ -19,9 +19,10 @@ function startGame() {
         // Create table
 		createTable();
 		
-		// Create cells
-		row = params.width;
-		col = params.height;
+		//Max lengths
+		row = params.height;
+		col = params.width;
+		
 			
 		for (var i=0 ;i < row; i++) 
 		{
@@ -101,7 +102,11 @@ function jogada(row,col)
 	}
 	else
 	{
-		openCell(cells[row][col]);
+		if(cells[row][col].getNeighbourMineCount() != 0)
+			openCell(cells[row][col]);
+		else
+			openNoneCell(cells[row][col]);
+			//openRecursive(cells[row][col]);
 	}
 }
 
@@ -112,11 +117,11 @@ function setRandomMines(numberOfMines)
 	
 	while(actualMines < numberOfMines)
 	{
-		var row = randomNumber();
-		var col = randomNumber();
+		var randomRow = randomNumber(row);
+		var randomCol = randomNumber(col);
 
-		if(cells[row][col].getHasMine() == false){
-			cells[row][col].setHasMine(true); 
+		if(cells[randomRow][randomCol].getHasMine() == false){
+			cells[randomRow][randomCol].setHasMine(true); 
 			actualMines++;
 		}	
 
@@ -124,32 +129,32 @@ function setRandomMines(numberOfMines)
 	
 }
 
-function randomNumber()
+function randomNumber(maxRamdomNumber)
 {
-	return Math.floor(Math.random() * params.width);
+	return Math.floor(Math.random() * maxRamdomNumber);
 }
 
 function scanNeighbour()
 {
-	for (var i=0 ; i < col; i++) 
+	for (var i=0 ; i < row; i++) 
 	{
- 		for (var j = 0; j < row; j++) 
+ 		for (var j = 0; j < col; j++) 
  		{
  			if(i > 0 && j > 0 && cells[i-1][j-1].getHasMine()==true)
  				cells[i][j].addNeighbourMineCount(); 	
 			if(i > 0 && cells[i-1][j].getHasMine()==true)
 				cells[i][j].addNeighbourMineCount();
-			if(i > 0 && j < (row-1) && cells[i-1][j+1].getHasMine()==true)
+			if(i > 0 && j < (col-1) && cells[i-1][j+1].getHasMine()==true)
 				cells[i][j].addNeighbourMineCount();
 			if(j > 0 && cells[i][j-1].getHasMine()==true)
 				cells[i][j].addNeighbourMineCount();
-			if(j < (row-1) && cells[i][j+1].getHasMine()==true)
+			if(j < (col-1) && cells[i][j+1].getHasMine()==true)
 				cells[i][j].addNeighbourMineCount();
-			if(i < (col-1) && j > 0 && cells[i+1][j-1].getHasMine()==true)
+			if(i < (row-1) && j > 0 && cells[i+1][j-1].getHasMine()==true)
 				cells[i][j].addNeighbourMineCount();
-			if(i < (col-1) && cells[i+1][j].getHasMine()==true)
+			if(i < (row-1) && cells[i+1][j].getHasMine()==true)
 				cells[i][j].addNeighbourMineCount();
-			if(i < (col-1) && j < (row-1) && cells[i+1][j+1].getHasMine()==true)
+			if(i < (row-1) && j < (col-1) && cells[i+1][j+1].getHasMine()==true)
 				cells[i][j].addNeighbourMineCount();
  		}
 	}
@@ -158,14 +163,16 @@ function scanNeighbour()
 
 function revealAll()
 {
-	for (var i = 0; i < params.width; i++) 
+	for (var i = 0; i < row; i++) 
 	{
-        for (var j = 0; j < params.height; j++) 
+        for (var j = 0; j < col; j++) 
         {
         	if(cells[i][j].getHasMine() == false)
         	{
-        		openCell(cells[i][j]);
-            	
+        		if(cells[i][j].getNeighbourMineCount() != 0)
+        			openCell(cells[i][j]);
+            	else
+            		openNoneCell(cells[i][j])
         	}
             else
             {
@@ -181,15 +188,50 @@ function getNumberColor(NeighbourMineCount)
 	return "Number"+NeighbourMineCount;
 }
 
-function openNeighbour(cell){
+/*
+function openRecursive(cell){
+	var row = cell.getRowCoord();
+	var col = cell.getColCoord();
 
+	if(row > 0 && col > 0)
+		openNextRecursive(cell[row - 1][col - 1]);
+	if(row > 0)
+    	openNextRecursive(cell[row - 1][col]);
+    if(row > 0 && col < )
+    openNextRecursive(cell[row - 1][col + 1]);
+    openNextRecursive(cell[row + 1][col]);
+
+    openNextRecursive(cell[row][col - 1]);
+    openNextRecursive(cell[row][col + 1]);
+    openNextRecursive(cell[row + 1][col - 1]);
+    openNextRecursive(cell[row + 1][col + 1]);
 }
 
-function openCell(cell){
+function openNextRecursive(cell){
+	var row = cell.getRowCoord();
+	var col = cell.getColCoord();
 
-	// If its a 0 value field
-	if(cell.getNeighbourMineCount() != 0)
-		document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = cell.getNeighbourMineCount();
+    if (cell == null) return;
+    if (cell.getIsOpened() == true) return;
+
+    // Blank field
+    if (cell.getNeighbourMineCount == 0){
+        cell.setIsOpened(true);
+        openNoneCell(cell);
+        openRecursive(cell);
+    }
+    else{    
+    cell.setIsOpened(true);
+    openCell(cell);
+    }
+}*/
+
+function openCell(cell){
+	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = cell.getNeighbourMineCount();
+    document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).className = getNumberColor(cell.getNeighbourMineCount());
+}
+
+function openNoneCell(cell){
     document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).className = getNumberColor(cell.getNeighbourMineCount());
 }
 
