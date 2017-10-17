@@ -5,7 +5,9 @@ var cells = new Array();
 var row = 0;
 var col = 0;
 var flagCounter = 0;
-var counter;
+var counter = 0;
+var minutes = 0;
+var seconds = 0;
 
 
 
@@ -46,9 +48,7 @@ function startGame() {
 
 		// Set Timer
 		setTimer();
-
-
-		
+	
     }
 
     return false;
@@ -105,7 +105,7 @@ function jogada(row,col)
 		document.getElementById("row"+row+"col"+col).value="X";
 		document.getElementById("row"+row+"col"+col).className = "Mine";
 		revealAll();
-		alert("Game Over");
+		endGame("Derrota");
 	}
 	else
 	{
@@ -130,7 +130,7 @@ function putFlag(row,col)
 		{
 			flagCounter++;
 			if(flagCounter == params.qtyBombs)
-				alert("Jogador Venceu!");
+				endGame("Vitoria");
 		}  
 	}
 	else // Remove Flag
@@ -144,9 +144,8 @@ function putFlag(row,col)
 
 function setTimer()
 {
-	var minutes = 0;
-	var seconds = 0;
-
+	minutes = 0;
+	seconds = 0;
 
 	counter= setInterval(function() {
 		minutes = minutes + Math.floor(seconds / 60);
@@ -157,6 +156,25 @@ function setTimer()
 	}, 1000);
 }
 
+function stopTimer()
+{
+	clearInterval(counter);
+}
+
+function getTotalOpenedFields(){
+	var total = 0;
+
+	for (var i=0 ; i < row; i++) 
+	{
+ 		for (var j = 0; j < col; j++) 
+ 		{
+ 			if(cells[i][j].getIsOpened())
+ 				total++;
+ 		}
+	}
+
+	return total;
+}
 
 function setRandomMines(numberOfMines)
 {
@@ -174,6 +192,28 @@ function setRandomMines(numberOfMines)
 
 	}
 	
+}
+
+function endGame(result){
+	stopTimer();
+	var totalOpenedFields = getTotalOpenedFields()
+
+    var table = document.getElementById("historico");
+    tableRow = table.insertRow(-1);
+    var nome = tableRow.insertCell(-1);
+    var dimensao = tableRow.insertCell(-1);
+    var qtdeBomba = tableRow.insertCell(-1);
+    var tempoGasto = tableRow.insertCell(-1);
+    var numCelulaAberta = tableRow.insertCell(-1);
+    var resultado = tableRow.insertCell(-1);
+
+
+    nome.innerHTML = "<p>"+params.name+"</p>";
+    dimensao.innerHTML = "<p>"+params.width+" x "+params.height+"</p>";
+    qtdeBomba.innerHTML = "<p>"+params.qtyBombs+"</p>";
+    tempoGasto.innerHTML = "<p>"+minutes+" minutos e "+seconds+" segundos</p>";
+    numCelulaAberta.innerHTML = "<p>"+totalOpenedFields+"</p>";
+    resultado.innerHTML = "<p>"+result+"</p>";
 }
 
 function randomNumber(maxRamdomNumber)

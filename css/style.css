@@ -23,9 +23,7 @@ form {
     margin-bottom:30px;
 }
 
-td {
-    background-color:#D3D3D3;
-}
+
 
 #container-campo {
     width:70%;
@@ -60,4 +58,18 @@ td {
     background:url(flag.png);
 }
 
+#container-historico{
+    width:100%;
+}
 
+#historico{
+    margin:0 auto;
+}
+
+#historico td{
+    text-align: center;
+}
+
+.hTitle{
+    padding:0 20px 0 20px;
+}

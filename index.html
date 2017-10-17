@@ -16,6 +16,7 @@
             <input type="text" name="height" placeholder="height" class="params">
             <input type="text" name="qtyBombs" placeholder="amount of bombs" class="params"> <br/><br/>
             <p>DANGER: The minimal dimension is: 6 x 6. And the maximum is: 50 x 50</p>
+             <p>Right click to place a flag</p>
         <input id="bt-start" type="button" value="Start" onclick="startGame()">	
         <input id="bt-start" type="button" value="Reveal All" onclick="revealAll()"> 
         <input id="bt-start" type="button" value="Recover All" onclick="recoverAll()"> 
@@ -26,6 +27,17 @@
         <table id="campo-minado">
         </table></br>
         <p id="demo"></p>
+    </div>
+
+    <div id="container-historico">
+        <table id="historico">
+            <th class="hTitle">Nome do Jogador</th>
+            <th class="hTitle">Dimensões do Campo</th>
+            <th class="hTitle">Número de bombas no campo</th>
+            <th class="hTitle">Tempo gasto</th>
+            <th class="hTitle">Número de células abertas</th>
+            <th class="hTitle">Resultado da partida</th>
+        </table>
     </div>
 
 </body>
