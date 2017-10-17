@@ -4,6 +4,9 @@ params = new Object();
 var cells = new Array();
 var row = 0;
 var col = 0;
+var flagCounter = 0;
+var counter;
+
 
 
 
@@ -41,6 +44,9 @@ function startGame() {
 		// Scan 
 		scanNeighbour();
 
+		// Set Timer
+		setTimer();
+
 
 		
     }
@@ -70,7 +76,7 @@ function createTable() {
         tableRow = table.insertRow(-1);
         for (var j = 0; j < columnCount; j++) {
             var cell = tableRow.insertCell(-1);
-            cell.innerHTML = "<input type='button' id='row"+i+"col"+j+"' value=' ' onclick='jogada("+i+","+j+")'/>";
+            cell.innerHTML = "<input type='button' id='row"+i+"col"+j+"' value=' ' onclick='jogada("+i+","+j+")' oncontextmenu='putFlag("+i+","+j+"); return false;'/>";
         }
     }
 }
@@ -98,6 +104,7 @@ function jogada(row,col)
 	{
 		document.getElementById("row"+row+"col"+col).value="X";
 		document.getElementById("row"+row+"col"+col).className = "Mine";
+		revealAll();
 		alert("Game Over");
 	}
 	else
@@ -108,6 +115,46 @@ function jogada(row,col)
 			openRecursive(cells[row][col]);
 		}
 	}
+
+}
+
+function putFlag(row,col)
+{
+	// Add Flag
+	if(!cells[row][col].getHasFlag())
+	{
+		cells[row][col].setHasFlag(true);
+		document.getElementById("row"+row+"col"+col).className = "Flag";
+		
+		if(cells[row][col].getHasMine())
+		{
+			flagCounter++;
+			if(flagCounter == params.qtyBombs)
+				alert("Jogador Venceu!");
+		}  
+	}
+	else // Remove Flag
+	{
+		cells[row][col].setHasFlag(false);
+		document.getElementById("row"+row+"col"+col).className = ' ';
+		if(cells[row][col].getHasMine())
+			flagCounter--;
+	}
+}
+
+function setTimer()
+{
+	var minutes = 0;
+	var seconds = 0;
+
+
+	counter= setInterval(function() {
+		minutes = minutes + Math.floor(seconds / 60);
+		seconds = (seconds % 60) + 1;		
+
+		document.getElementById("demo").innerHTML = "Tempo de Jogo:"+ minutes + "m " + seconds + "s ";
+
+	}, 1000);
 }
 
 
@@ -183,6 +230,20 @@ function revealAll()
     }
 }
 
+function recoverAll()
+{
+	for (var i = 0; i < row; i++) 
+	{
+        for (var j = 0; j < col; j++) 
+        {
+        	if(cells[i][j].getIsOpened() == false)
+        	{
+            	closeCell(cells[i][j]);
+            }
+        }
+    }
+}
+
 function getNumberColor(NeighbourMineCount)
 {
 	return "Number"+NeighbourMineCount;
@@ -218,6 +279,7 @@ function openNextRecursive(cell){
 
     if (cell.getIsOpened() == true) return;
 
+
     if (cell.getNeighbourMineCount() == 0){
         cell.setIsOpened(true);
         openNoneCell(cell);
@@ -233,6 +295,12 @@ function openNextRecursive(cell){
 function openCell(cell){
 	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = cell.getNeighbourMineCount();
     document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).className = getNumberColor(cell.getNeighbourMineCount());
+}
+
+function closeCell(cell)
+{
+	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = null;
+	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).className = ' ';
 }
 
 function openNoneCell(cell){
