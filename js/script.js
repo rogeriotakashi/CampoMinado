@@ -302,6 +302,11 @@ function recoverAll()
         	{
             	closeCell(cells[i][j]);
             }
+
+            if(cells[i][j].getHasFlag())
+            {
+            	document.getElementById("row"+i+"col"+j).className = "Flag";
+            }
         }
     }
 }
@@ -361,7 +366,7 @@ function openCell(cell){
 
 function closeCell(cell)
 {
-	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = null;
+	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).value = ' ';
 	document.getElementById("row"+cell.getRowCoord()+"col"+cell.getColCoord()).className = ' ';
 }
 
