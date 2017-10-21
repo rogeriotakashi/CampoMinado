@@ -70,10 +70,11 @@ function resetGame()
 	row = 0;
 	col = 0;
 	flagCounter = 0;
-	counter = 0;
 	minutes = 0;
 	seconds = 0;
 	gameAlreadyExist = false;
+
+	stopTimer();
 }
 
 
@@ -169,7 +170,7 @@ function setTimer()
 	minutes = 0;
 	seconds = 0;
 
-	counter= setInterval(function() {
+	counter = setInterval(function() {
 		minutes = minutes + Math.floor(seconds / 60);
 		seconds = (seconds % 60) + 1;		
 
