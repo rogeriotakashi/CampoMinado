@@ -8,11 +8,17 @@ var flagCounter = 0;
 var counter = 0;
 var minutes = 0;
 var seconds = 0;
+var gameAlreadyExist = false;
 
 
 
 
 function startGame() {
+	if(gameAlreadyExist)
+		resetGame();
+
+	gameAlreadyExist = true;
+
     var check = checkDimensions();
     var check2 = checkNumBombs();
     myForm = document.forms["game-parameters"];
@@ -54,6 +60,22 @@ function startGame() {
     return false;
 }
 
+function resetGame()
+{
+	var table = document.getElementById("campo-minado");
+	table.innerHTML = "";
+
+	params = new Object();
+	cells = new Array();
+	row = 0;
+	col = 0;
+	flagCounter = 0;
+	counter = 0;
+	minutes = 0;
+	seconds = 0;
+	gameAlreadyExist = false;
+}
+
 
 function checkDimensions() {
     myForm = document.forms["game-parameters"];
@@ -61,7 +83,7 @@ function checkDimensions() {
     params.height = myForm["height"].value;
 
     if ( params.width < 6 || params.height < 6 || params.width > 50 || params.height > 50) {
-        alert("I told you asshole, the dimension must be at least 6 x 6 and maximum 50 x 50."); 
+        alert("The dimension must be at least 6 x 6 and maximum 50 x 50."); 
         return false;
     } else {
         return true;
